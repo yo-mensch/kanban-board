@@ -22,6 +22,7 @@ let listArrays=[];
 // Drag Functionality
 let draggedItem;
 let currentColumn;
+let dragging = false;
 
 // Get Arrays from localStorage if available, set default values if not
 function getSavedColumns() {
@@ -59,6 +60,9 @@ function createItemEl(columnEl, column, item, index) {
   listEl.textContent = item;
   listEl.draggable = true;
   listEl.setAttribute('ondragstart', 'drag(event)');
+  listEl.contentEditable = true;
+  listEl.id = index;
+  listEl.setAttribute('onfocusout', `updateItem(${index}, ${column})`);
   //append
   columnEl.appendChild(listEl);
 }
@@ -77,21 +81,43 @@ function updateDOM() {
   // Progress Column
   progressList.textContent = '';
   progressListArray.forEach((progressItem, index)=>{
-    createItemEl(progressList, 0, progressItem, index);
+    createItemEl(progressList, 1, progressItem, index);
   });
   // Complete Column
   completeList.textContent = '';
   completeListArray.forEach((completeItem, index)=>{
-    createItemEl(completeList, 0, completeItem, index);
+    createItemEl(completeList, 2, completeItem, index);
   });
   // On Hold Column
   onHoldList.textContent = '';
   onHoldListArray.forEach((onHoldItem, index)=>{
-    createItemEl(onHoldList, 0, onHoldItem, index);
+    createItemEl(onHoldList, 3, onHoldItem, index);
   });
   // Run getSavedColumns only once, Update Local Storage
   updatedOnLoad = true;
   updateSavedColumns();
+}
+
+function updateItem(index, column){
+  const selectedArr = listArrays[column];
+  const selectedColEl = itemLists[column].children;
+  if(!dragging){
+    if(!selectedColEl[index].textContent){
+      selectedArr.splice(index, 1); 
+    } else {
+      selectedArr[index] = selectedColEl[index].textContent;
+    }
+    console.log(selectedArr);
+    updateDOM();
+  }
+}
+
+function addToColumn(column){
+  const itemText = addItems[column].textContent;
+  const selectedArr = listArrays[column];
+  selectedArr.push(itemText);
+  addItems[column].textContent = '';
+  updateDOM();
 }
 
 function showInputBox(column){
@@ -104,6 +130,7 @@ function hideInputBox(column){
   addBtns[column].style.visibility = 'visible';
   saveItemBtns[column].style.display = 'none';
   addItemContainers[column].style.display = 'none';
+  addToColumn(column);
 }
 
 function rebuildArrays(){
@@ -128,7 +155,8 @@ function rebuildArrays(){
 
 function drag(evt){
   draggedItem = evt.target;
-  console.log(draggedItem);
+  dragging = true;
+
 }
 
 function allowDrop(evt){
@@ -148,6 +176,7 @@ function drop(evt){
   });
   const parent = itemLists[currentColumn];
   parent.appendChild(draggedItem);
+  dragging = false;
   rebuildArrays();
 }
 
