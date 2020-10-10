@@ -5,15 +5,15 @@ html {
 }
 
 :root {
-    --column-1: #fbb901;
-    --column-2: #feceab;
-    --column-3: #ff847c;
-    --column-4: #e84a5f;
+    --column-1: #f6f7d4;
+    --column-2: #d2f6c5;
+    --column-3: #99f3bd;
+    --column-4: #28df99;
 }
 
 body {
     margin: 0;
-    background: url("images/scott-webb-GQD3Av_9A88-unsplash.jpg");
+    background: url("images/isaac-benhesed-onLbXleIkds-unsplash.jpg");
     background-size: cover;
     background-position: 50% 60%;
     background-attachment: fixed;
@@ -178,7 +178,7 @@ ul {
   .solid:hover {
     transition: unset;
     filter: brightness(95%);
-    color: white;
+    color: black;
   }
   
   .plus-sign {
